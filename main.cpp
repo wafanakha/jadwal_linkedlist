@@ -92,6 +92,30 @@ void change_jadwal(int jam, int hari, int hariLama, int akhir, string kegiatan, 
     }
     cout << "Error";
 }
+
+void delete_jadwal(int hari, string kegiatan)
+{
+    if (isEmpty() == true)
+    {
+        cout << "Jadwal Masih kosong";
+        return;
+    }
+    else
+    {
+        Node *current = head;
+        while (current != NULL)
+        {
+            if (current->next->hari == hari && current->next->kegiatan == kegiatan)
+            {
+
+                return;
+            }
+            current = current->next;
+        }
+        cout << "Error";
+    }
+    cout << "Error";
+}
 void clearList()
 {
     Node *bantu, *hapus;
