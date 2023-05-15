@@ -57,40 +57,6 @@ void add_jadwal(int jam, int akhir, string hari, string kegiatan)
             {
                 baru->next = current->next;
                 current->next = baru;
-                void insertDepan(int nilai, string kegiatan)
-                {
-                    Node *baru = new Node;
-                    baru->jam = nilai;
-                    baru->kegiatan = kegiatan;
-                    baru->next = NULL;
-                    if (isEmpty() == true)
-                    {
-                        head = tail = baru;
-                        tail->next = NULL;
-                    }
-                    else
-                    {
-                        baru->next = head;
-                        head = baru;
-                    }
-                }
-                void insertBelakang(int nilai, string kegiatan)
-                {
-                    Node *baru = new Node;
-                    baru->jam = nilai;
-                    baru->kegiatan = kegiatan;
-                    baru->next = NULL;
-                    if (isEmpty() == true)
-                    {
-                        head = tail = baru;
-                        tail->next = NULL;
-                    }
-                    else
-                    {
-                        tail->next = baru;
-                        tail = baru;
-                    }
-                }
                 return;
             }
             current = current->next;
