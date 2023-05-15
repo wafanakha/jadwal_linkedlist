@@ -5,7 +5,6 @@ struct Node
 {
     int jam;
     int akhir;
-    string hari;
     string kegiatan;
     Node *next;
 };
@@ -23,13 +22,12 @@ bool isEmpty()
     else
         return false;
 }
-void add_jadwal(int jam, int akhir, string hari, string kegiatan)
+void add_jadwal(int jam, int akhir, string kegiatan)
 {
     Node *baru = new Node;
     baru->jam = jam;
     baru->akhir = akhir;
     baru->kegiatan = kegiatan;
-    baru->hari = hari;
     if (isEmpty() == true)
     {
         head = tail = baru;
@@ -66,6 +64,31 @@ void add_jadwal(int jam, int akhir, string hari, string kegiatan)
     cout << "Error";
 }
 
+void change_jadwal(int jam, int akhir, string kegiatan, string kegiatanLama)
+{
+    if (isEmpty() == true)
+    {
+        cout << "Jadwal Masih kosong";
+        return;
+    }
+    else
+    {
+        Node *current = head;
+        while (current != NULL)
+        {
+            if (kegiatanLama == current->kegiatan)
+            {
+                current->jam = jam;
+                current->akhir = akhir;
+                current->kegiatan = kegiatan;
+                return;
+            }
+            current = current->next;
+        }
+        cout << "Error";
+    }
+    cout << "Error";
+}
 int hitungList()
 {
     Node *hitung;
@@ -77,33 +100,6 @@ int hitungList()
         hitung = hitung->next;
     }
     return jumlah;
-}
-void insertTengah(int jam, int posisi, string kegiatan)
-{
-    if (posisi < 1 || posisi > hitungList())
-    {
-        cout << "Posisi diluar jangkauan" << endl;
-    }
-    else if (posisi == 1)
-    {
-        cout << "Posisi bukan posisi tengah" << endl;
-    }
-    else
-    {
-        Node *baru, *bantu;
-        baru = new Node();
-        baru->jam = jam;
-        baru->kegiatan = kegiatan;
-        bantu = head;
-        int nomor = 1;
-        while (nomor < posisi - 1)
-        {
-            bantu = bantu->next;
-            nomor++;
-        }
-        baru->next = bantu->next;
-        bantu->next = baru;
-    }
 }
 void hapusDepan()
 {
@@ -186,61 +182,6 @@ void hapusTengah(int posisi)
         delete hapus;
     }
 }
-void ubahDepan(int jam, string kegiatan)
-{
-    if (isEmpty() == 0)
-    {
-        head->jam = jam;
-        head->kegiatan = kegiatan;
-    }
-    else
-    {
-        cout << "List masih kosong!" << endl;
-    }
-}
-void ubahTengah(int jam, int posisi, string kegiatan)
-{
-    Node *bantu;
-    if (isEmpty() == 0)
-    {
-        if (posisi < 1 || posisi > hitungList())
-        {
-            cout << "Posisi di luar jangkauan" << endl;
-        }
-        else if (posisi == 1)
-        {
-            cout << "Posisi bukan posisi tengah" << endl;
-        }
-        else
-        {
-            bantu = head;
-            int nomor = 1;
-            while (nomor < posisi)
-            {
-                bantu = bantu->next;
-                nomor++;
-            }
-            bantu->jam = jam;
-            bantu->kegiatan = kegiatan;
-        }
-    }
-    else
-    {
-        cout << "List masih kosong!" << endl;
-    }
-}
-void ubahBelakang(int jam, string kegiatan)
-{
-    if (isEmpty() == 0)
-    {
-        tail->jam = jam;
-        tail->kegiatan = kegiatan;
-    }
-    else
-    {
-        cout << "List masih kosong!" << endl;
-    }
-}
 void clearList()
 {
     Node *bantu, *hapus;
@@ -261,11 +202,11 @@ void tampil()
     if (isEmpty() == false)
     {
         cout << "==============================\n";
-        cout << "kegiatan\t\tjam\t\thari\n";
+        cout << "kegiatan\t\tjam\n";
         cout << "==============================\n";
         while (bantu != NULL)
         {
-            cout << bantu->kegiatan << "\t\t" << bantu->jam << " - " << bantu->akhir << "\t\t" << bantu->hari << "\n";
+            cout << bantu->kegiatan << "\t\t" << bantu->jam << " - " << bantu->akhir << "\n";
             bantu = bantu->next;
         }
         cout << endl;
@@ -308,22 +249,26 @@ int main()
             cin >> data;
             cout << "Masukkan jam kegiatan berakhir\t: ";
             cin >> akhir;
-            cout << "Masukkan hari kegiatan\t: ";
-            cin >> hari;
-            add_jadwal(data, akhir, hari, kegiatan);
+
+            add_jadwal(data, akhir, kegiatan);
             cout << "Data " << kegiatan << " Berhasil diinput\n\n";
             break;
         }
         case 2:
         {
             cout << "--Tambah Belakang--\n";
-            int data;
-            string kegiatan;
-            cout << "Masukkan nama\t: ";
+            int data, akhir;
+            string kegiatan, kegiatanLama;
+            cout << "Masukkan kegiatan yang ingin diubah\t: ";
+            cin >> kegiatanLama;
+            cout << "Masukkan nama kegiatan baru\t: ";
             cin >> kegiatan;
-            cout << "Masukkan NIM\t: ";
+            cout << "Masukkan jam kegiatan baru dimulai\t: ";
             cin >> data;
-            cout << "Data " << kegiatan << " Berhasil diinput\n\n";
+            cout << "Masukkan jam kegiatan baru berakhir\t: ";
+            cin >> akhir;
+            change_jadwal(data, akhir, kegiatan, kegiatanLama);
+            cout << "Data " << kegiatanLama << " Berhasil diubah\n\n";
             break;
         }
         case 3:
@@ -337,7 +282,6 @@ int main()
             cin >> data;
             cout << "Masukkan Posisi\t:";
             cin >> posisi;
-            insertTengah(data, posisi, kegiatan);
             cout << "Data " << kegiatan << " Berhasil diinput\n\n";
 
             break;
@@ -352,7 +296,6 @@ int main()
             cout << "Masukkan NIM\t: ";
             cin >> data;
             oldkegiatan = head->kegiatan;
-            ubahDepan(data, kegiatan);
             cout << "Data " << oldkegiatan << " telah diganti dengan data " << kegiatan << " !\n\n";
             break;
         }
