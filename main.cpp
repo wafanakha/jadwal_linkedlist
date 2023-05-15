@@ -245,19 +245,6 @@ int main()
         }
         case 4:
         {
-            cout << "--Ubah Depan--\n";
-            int data;
-            string kegiatan, oldkegiatan;
-            cout << "Masukkan nama\t: ";
-            cin >> kegiatan;
-            cout << "Masukkan NIM\t: ";
-            cin >> data;
-            oldkegiatan = head->kegiatan;
-            cout << "Data " << oldkegiatan << " telah diganti dengan data " << kegiatan << " !\n\n";
-            break;
-        }
-        case 5:
-        {
             tampil();
             break;
         }
