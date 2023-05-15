@@ -3,8 +3,10 @@ using namespace std;
 
 struct Node
 {
-    int nim;
-    string name;
+    int jam;
+    int akhir;
+    string hari;
+    string kegiatan;
     Node *next;
 };
 Node *head;
@@ -21,11 +23,53 @@ bool isEmpty()
     else
         return false;
 }
-void insertDepan(int nilai, string name)
+void add_jadwal(int jam, int akhir, string hari, string kegiatan)
 {
     Node *baru = new Node;
-    baru->nim = nilai;
-    baru->name = name;
+    baru->jam = jam;
+    baru->akhir = akhir;
+    baru->kegiatan = kegiatan;
+    baru->hari = hari;
+    if (isEmpty() == true)
+    {
+        head = tail = baru;
+        tail->next = NULL;
+        return;
+    }
+    else if (baru->akhir <= head->jam)
+    {
+        baru->next = head;
+        head = baru;
+        return;
+    }
+    else if (baru->jam >= tail->akhir)
+    {
+        tail->next = baru;
+        tail = baru;
+        return;
+    }
+    else
+    {
+        Node *current = head;
+        while (current != NULL)
+        {
+            if (baru->jam >= current->akhir && baru->akhir <= current->next->jam)
+            {
+                baru->next = current->next;
+                current->next = baru;
+                return;
+            }
+            current = current->next;
+        }
+        cout << "Error";
+    }
+    cout << "Error";
+}
+void insertDepan(int nilai, string kegiatan)
+{
+    Node *baru = new Node;
+    baru->jam = nilai;
+    baru->kegiatan = kegiatan;
     baru->next = NULL;
     if (isEmpty() == true)
     {
@@ -38,11 +82,11 @@ void insertDepan(int nilai, string name)
         head = baru;
     }
 }
-void insertBelakang(int nilai, string name)
+void insertBelakang(int nilai, string kegiatan)
 {
     Node *baru = new Node;
-    baru->nim = nilai;
-    baru->name = name;
+    baru->jam = nilai;
+    baru->kegiatan = kegiatan;
     baru->next = NULL;
     if (isEmpty() == true)
     {
@@ -67,7 +111,7 @@ int hitungList()
     }
     return jumlah;
 }
-void insertTengah(int nim, int posisi, string name)
+void insertTengah(int jam, int posisi, string kegiatan)
 {
     if (posisi < 1 || posisi > hitungList())
     {
@@ -81,8 +125,8 @@ void insertTengah(int nim, int posisi, string name)
     {
         Node *baru, *bantu;
         baru = new Node();
-        baru->nim = nim;
-        baru->name = name;
+        baru->jam = jam;
+        baru->kegiatan = kegiatan;
         bantu = head;
         int nomor = 1;
         while (nomor < posisi - 1)
@@ -175,19 +219,19 @@ void hapusTengah(int posisi)
         delete hapus;
     }
 }
-void ubahDepan(int nim, string name)
+void ubahDepan(int jam, string kegiatan)
 {
     if (isEmpty() == 0)
     {
-        head->nim = nim;
-        head->name = name;
+        head->jam = jam;
+        head->kegiatan = kegiatan;
     }
     else
     {
         cout << "List masih kosong!" << endl;
     }
 }
-void ubahTengah(int nim, int posisi, string name)
+void ubahTengah(int jam, int posisi, string kegiatan)
 {
     Node *bantu;
     if (isEmpty() == 0)
@@ -209,8 +253,8 @@ void ubahTengah(int nim, int posisi, string name)
                 bantu = bantu->next;
                 nomor++;
             }
-            bantu->nim = nim;
-            bantu->name = name;
+            bantu->jam = jam;
+            bantu->kegiatan = kegiatan;
         }
     }
     else
@@ -218,12 +262,12 @@ void ubahTengah(int nim, int posisi, string name)
         cout << "List masih kosong!" << endl;
     }
 }
-void ubahBelakang(int nim, string name)
+void ubahBelakang(int jam, string kegiatan)
 {
     if (isEmpty() == 0)
     {
-        tail->nim = nim;
-        tail->name = name;
+        tail->jam = jam;
+        tail->kegiatan = kegiatan;
     }
     else
     {
@@ -250,11 +294,11 @@ void tampil()
     if (isEmpty() == false)
     {
         cout << "==============================\n";
-        cout << "Nama\t\tNIM\n";
+        cout << "kegiatan\t\tjam\t\thari\n";
         cout << "==============================\n";
         while (bantu != NULL)
         {
-            cout << bantu->name << "\t\t" << bantu->nim << "\n";
+            cout << bantu->kegiatan << "\t\t" << bantu->jam << " - " << bantu->akhir << "\t\t" << bantu->hari << "\n";
             bantu = bantu->next;
         }
         cout << endl;
@@ -276,13 +320,6 @@ int main()
         cout << "2. Tambah Belakang" << endl;
         cout << "3. Tambah Tengah" << endl;
         cout << "4. Ubah Depan" << endl;
-        cout << "5. Ubah Belakang" << endl;
-        cout << "6. Ubah Tengah" << endl;
-        cout << "7. Hapus Depan" << endl;
-        cout << "8. Hapus Belakang" << endl;
-        cout << "9. Hapus Tengah" << endl;
-        cout << "10. Hapus List" << endl;
-        cout << "11. Tampilkan" << endl;
         cout << "0. Exit" << endl;
         int choice;
         cout << "Enter your choice: ";
@@ -296,42 +333,46 @@ int main()
         case 1:
         {
             cout << "--Tambah Depan--\n";
-            int data;
-            string name;
-            cout << "Masukkan nama\t: ";
-            cin >> name;
-            cout << "Masukkan NIM\t: ";
+            int data, akhir;
+            string kegiatan, hari;
+            cout << "Masukkan nama kegiatan\t: ";
+            cin >> kegiatan;
+            cout << "Masukkan jam kegiatan dimulai\t: ";
             cin >> data;
-            insertDepan(data, name);
-            cout << "Data " << name << " Berhasil diinput\n\n";
+            cout << "Masukkan jam kegiatan berakhir\t: ";
+            cin >> akhir;
+            cout << "Masukkan NIM\t: ";
+            cin >> hari;
+            add_jadwal(data, akhir, hari, kegiatan);
+            cout << "Data " << kegiatan << " Berhasil diinput\n\n";
             break;
         }
         case 2:
         {
             cout << "--Tambah Belakang--\n";
             int data;
-            string name;
+            string kegiatan;
             cout << "Masukkan nama\t: ";
-            cin >> name;
+            cin >> kegiatan;
             cout << "Masukkan NIM\t: ";
             cin >> data;
-            insertBelakang(data, name);
-            cout << "Data " << name << " Berhasil diinput\n\n";
+            insertBelakang(data, kegiatan);
+            cout << "Data " << kegiatan << " Berhasil diinput\n\n";
             break;
         }
         case 3:
         {
             cout << "--Tambah Tengah--\n";
             int data, posisi;
-            string name;
+            string kegiatan;
             cout << "Masukkan nama\t: ";
-            cin >> name;
+            cin >> kegiatan;
             cout << "Masukkan NIM\t: ";
             cin >> data;
             cout << "Masukkan Posisi\t:";
             cin >> posisi;
-            insertTengah(data, posisi, name);
-            cout << "Data " << name << " Berhasil diinput\n\n";
+            insertTengah(data, posisi, kegiatan);
+            cout << "Data " << kegiatan << " Berhasil diinput\n\n";
 
             break;
         }
@@ -339,17 +380,21 @@ int main()
         {
             cout << "--Ubah Depan--\n";
             int data;
-            string name, oldName;
+            string kegiatan, oldkegiatan;
             cout << "Masukkan nama\t: ";
-            cin >> name;
+            cin >> kegiatan;
             cout << "Masukkan NIM\t: ";
             cin >> data;
-            oldName = head->name;
-            ubahDepan(data, name);
-            cout << "Data " << oldName << " telah diganti dengan data " << name << " !\n\n";
+            oldkegiatan = head->kegiatan;
+            ubahDepan(data, kegiatan);
+            cout << "Data " << oldkegiatan << " telah diganti dengan data " << kegiatan << " !\n\n";
             break;
         }
-
+        case 5:
+        {
+            tampil();
+            break;
+        }
         default:
         {
             cout << "Invalid choice" << endl;
