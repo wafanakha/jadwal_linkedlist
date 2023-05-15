@@ -5,6 +5,7 @@ struct Node
 {
     int jam;
     int akhir;
+    int hari;
     string kegiatan;
     Node *next;
 };
@@ -22,25 +23,26 @@ bool isEmpty()
     else
         return false;
 }
-void add_jadwal(int jam, int akhir, string kegiatan)
+void add_jadwal(int jam, int akhir, string kegiatan, int hari)
 {
     Node *baru = new Node;
     baru->jam = jam;
     baru->akhir = akhir;
     baru->kegiatan = kegiatan;
+    baru->hari = hari;
     if (isEmpty() == true)
     {
         head = tail = baru;
         tail->next = NULL;
         return;
     }
-    else if (baru->akhir <= head->jam)
+    else if (baru->akhir <= head->jam && baru->hari == head->hari)
     {
         baru->next = head;
         head = baru;
         return;
     }
-    else if (baru->jam >= tail->akhir)
+    else if (baru->hari > tail->hari || baru->jam >= tail->akhir)
     {
         tail->next = baru;
         tail = baru;
@@ -51,7 +53,7 @@ void add_jadwal(int jam, int akhir, string kegiatan)
         Node *current = head;
         while (current != NULL)
         {
-            if (baru->jam >= current->akhir && baru->akhir <= current->next->jam)
+            if (baru->hari <= current->hari && baru->jam >= current->akhir && baru->akhir <= current->next->jam || current->next->hari == baru->hari && baru->akhir <= current->next->jam)
             {
                 baru->next = current->next;
                 current->next = baru;
@@ -64,7 +66,7 @@ void add_jadwal(int jam, int akhir, string kegiatan)
     cout << "Error";
 }
 
-void change_jadwal(int jam, int akhir, string kegiatan, string kegiatanLama)
+void change_jadwal(int jam, int hari, int hariLama, int akhir, string kegiatan, string kegiatanLama)
 {
     if (isEmpty() == true)
     {
@@ -76,11 +78,12 @@ void change_jadwal(int jam, int akhir, string kegiatan, string kegiatanLama)
         Node *current = head;
         while (current != NULL)
         {
-            if (kegiatanLama == current->kegiatan)
+            if (hariLama == current->hari && kegiatanLama == current->kegiatan)
             {
                 current->jam = jam;
                 current->akhir = akhir;
                 current->kegiatan = kegiatan;
+                current->hari = hari;
                 return;
             }
             current = current->next;
@@ -88,99 +91,6 @@ void change_jadwal(int jam, int akhir, string kegiatan, string kegiatanLama)
         cout << "Error";
     }
     cout << "Error";
-}
-int hitungList()
-{
-    Node *hitung;
-    hitung = head;
-    int jumlah = 0;
-    while (hitung != NULL)
-    {
-        jumlah++;
-        hitung = hitung->next;
-    }
-    return jumlah;
-}
-void hapusDepan()
-{
-    Node *hapus;
-    if (isEmpty() == false)
-    {
-        if (head->next != NULL)
-        {
-            hapus = head;
-            head = head->next;
-            delete hapus;
-        }
-        else
-        {
-            head = tail = NULL;
-        }
-    }
-    else
-    {
-        cout << "List kosong!" << endl;
-    }
-}
-void hapusBelakang()
-{
-    Node *hapus;
-    Node *bantu;
-    if (isEmpty() == false)
-    {
-        if (head != tail)
-        {
-            hapus = tail;
-            bantu = head;
-            while (bantu->next != tail)
-            {
-                bantu = bantu->next;
-            }
-            tail = bantu;
-            tail->next = NULL;
-            delete hapus;
-        }
-        else
-        {
-            head = tail = NULL;
-        }
-    }
-    else
-    {
-        cout << "List kosong!" << endl;
-    }
-}
-void hapusTengah(int posisi)
-{
-    Node *bantu, *hapus, *sebelum;
-    if (posisi < 1 || posisi > hitungList())
-    {
-        cout << "Posisi di luar jangkauan" << endl;
-    }
-    else if (posisi == 1)
-    {
-        cout << "Posisi bukan posisi tengah" << endl;
-    }
-    else
-    {
-        int nomor = 1;
-        bantu = head;
-        while (nomor <= posisi)
-        {
-            if (nomor == posisi - 1)
-            {
-                sebelum = bantu;
-            }
-            if (nomor == posisi)
-            {
-                hapus = bantu;
-            }
-            bantu = bantu->next;
-            nomor++;
-        }
-        sebelum->next = bantu;
-        delete hapus;
-    }
 }
 void clearList()
 {
@@ -241,33 +151,36 @@ int main()
         case 1:
         {
             cout << "--Tambah Depan--\n";
-            int data, akhir;
-            string kegiatan, hari;
+            int data, akhir, hari;
+            string kegiatan;
             cout << "Masukkan nama kegiatan\t: ";
             cin >> kegiatan;
             cout << "Masukkan jam kegiatan dimulai\t: ";
             cin >> data;
             cout << "Masukkan jam kegiatan berakhir\t: ";
             cin >> akhir;
-
-            add_jadwal(data, akhir, kegiatan);
+            cout << "Masukkan hari kegiatan \t: ";
+            cin >> hari;
+            add_jadwal(data, akhir, kegiatan, hari);
             cout << "Data " << kegiatan << " Berhasil diinput\n\n";
             break;
         }
         case 2:
         {
             cout << "--Tambah Belakang--\n";
-            int data, akhir;
+            int data, akhir, hari, hariLama;
             string kegiatan, kegiatanLama;
             cout << "Masukkan kegiatan yang ingin diubah\t: ";
             cin >> kegiatanLama;
+            cout << "Masukkan kegiatan yang ingin diubah\t: ";
+            cin >> hariLama;
             cout << "Masukkan nama kegiatan baru\t: ";
             cin >> kegiatan;
             cout << "Masukkan jam kegiatan baru dimulai\t: ";
             cin >> data;
             cout << "Masukkan jam kegiatan baru berakhir\t: ";
             cin >> akhir;
-            change_jadwal(data, akhir, kegiatan, kegiatanLama);
+            change_jadwal(data, hari, hariLama, akhir, kegiatan, kegiatanLama);
             cout << "Data " << kegiatanLama << " Berhasil diubah\n\n";
             break;
         }
