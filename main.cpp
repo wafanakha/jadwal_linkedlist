@@ -341,7 +341,7 @@ int main()
             cin >> data;
             cout << "Masukkan jam kegiatan berakhir\t: ";
             cin >> akhir;
-            cout << "Masukkan NIM\t: ";
+            cout << "Masukkan hari kegiatan\t: ";
             cin >> hari;
             add_jadwal(data, akhir, hari, kegiatan);
             cout << "Data " << kegiatan << " Berhasil diinput\n\n";
