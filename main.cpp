@@ -3,8 +3,8 @@ using namespace std;
 
 struct Node
 {
-    int jam;
-    int akhir;
+    float jam;
+    float akhir;
     int hari;
     string kegiatan;
     Node *next;
@@ -23,7 +23,7 @@ bool isEmpty()
     else
         return false;
 }
-void add_jadwal(int jam, int akhir, string kegiatan, int hari)
+void add_jadwal(float jam, float akhir, string kegiatan, int hari)
 {
     Node *baru = new Node;
     baru->jam = jam;
@@ -65,7 +65,7 @@ void add_jadwal(int jam, int akhir, string kegiatan, int hari)
     cout << "Error";
 }
 
-void change_jadwal(int jam, int hari, int hariLama, int akhir, string kegiatan, string kegiatanLama)
+void change_jadwal(float jam, int hari, int hariLama, float akhir, string kegiatan, string kegiatanLama)
 {
     if (isEmpty() == true)
     {
@@ -198,7 +198,8 @@ int main()
         case 1:
         {
             cout << "--Tambah Depan--\n";
-            int data, akhir, hari;
+            int hari;
+            float data, akhir;
             string kegiatan;
             cout << "Masukkan nama kegiatan\t: ";
             cin >> kegiatan;
@@ -215,7 +216,8 @@ int main()
         case 2:
         {
             cout << "--Tambah Belakang--\n";
-            int data, akhir, hari, hariLama;
+            int hari, hariLama;
+            float data, akhir;
             string kegiatan, kegiatanLama;
             cout << "Masukkan kegiatan yang ingin diubah\t: ";
             cin >> kegiatanLama;
@@ -234,7 +236,7 @@ int main()
         case 3:
         {
             cout << "--Tambah Tengah--\n";
-            int data;
+            float data;
             string kegiatan;
             cout << "Masukkan nama kegiatan yang ingin dihapus";
             cin >> kegiatan;
